@@ -34,16 +34,28 @@ SUI_REGISTRY_ENABLED=true
 SUI_REGISTRY_PACKAGE_ID=<packageId>
 SEAL_MOCK_MODE=false
 SEAL_PACKAGE_ID=<packageId>
-SEAL_KEY_SERVER_OBJECT_IDS=0x73d05d62c18d9374e3ea529e8e0ed6161da1a141a94d3f76ae3fe4e99356db75,0xf5d14a81a982144ae441cd7d64b09027f116a468bd36e7eca494f750591623c8
-SEAL_THRESHOLD=2
+SEAL_KEY_SERVER_OBJECT_IDS=<provider-issued-mainnet-key-server-object-id>
+SEAL_KEY_SERVER_API_KEY_NAME=<provider-api-key-header-name>
+SEAL_KEY_SERVER_API_KEY=<provider-api-key>
+SEAL_THRESHOLD=1
 ```
 
-(Key servers above are the verified Mysten testnet independent key servers.)
+The public decentralized committee key server for mainnet is not self-serve yet.
+Use a verified independent mainnet provider such as Enoki, Ruby Nodes,
+NodeInfra, Overclock, Studio Mirai, H2O Nodes, Triton One, or Natsai. If you use
+multiple providers, configure `SEAL_KEY_SERVER_CONFIGS_JSON` so each provider can
+carry its own object id, weight, and auth values.
+
+Self-host Open mode is also valid for a local or controlled demo. Register an
+independent key server with the official Seal `key_server` package, run the
+server with the matching master key, then set `SEAL_KEY_SERVER_OBJECT_IDS` to
+that KeyServer object id. Open mode does not need API key env vars. Use a stable
+public HTTPS URL if the demo must work outside the local machine.
 
 ## How the backend uses it
 
 1. `POST /api/discover` builds an evidence artifact and encrypts it with Seal
-   (threshold 2) to the owner's identity → stored on Walrus.
+   to the owner's identity, then stores it on Walrus.
 2. `memory_registry::record_memory` is called to emit on-chain proof
    (blob id, content hash, Seal policy, owner).
 3. A later related run decrypts prior memories via Seal — key servers dry-run

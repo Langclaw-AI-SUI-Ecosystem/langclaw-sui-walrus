@@ -78,8 +78,8 @@ npm run demo:walrus-public      # publish a PUBLIC sample memory, then read it b
 npm run smoke:memwal            # live MemWal remember → recall round trip
 node --import tsx --env-file=.env scripts/walrus-mainnet-proof.ts "your topic"
 
-# Real Seal threshold encryption round trip (testnet committee/independent key server):
-#   see backend/.env.example "Real Seal" block for the verified testnet config, then:
+# Real Seal threshold encryption round trip:
+#   use the mainnet self-host/provider config in backend/.env.example, then:
 node --import tsx --env-file=.env scripts/seal-roundtrip-proof.ts
 ```
 
@@ -106,7 +106,7 @@ node --import tsx --env-file=.env scripts/seal-roundtrip-proof.ts
 | MemWal semantic recall | ✅ **live** (`relayer.memory.walrus.xyz`) |
 | Store → read-back → hash-verify | ✅ **live**, `hashVerified: true` |
 | Sui memory anchor | ✅ **live on mainnet** — `MemoryRecorded` event at package `0x7f3578eb…` carries the `walrus_blob_id`; e.g. tx [`aK7QiQ…`](https://suivision.xyz/txblock/aK7QiQdnbEXKtrHSZ5qifWcbfcBbu7UsFHsDjDFfR1H) |
-| Seal encryption | 🟡 owner-gated AES envelope on mainnet; **real `@mysten/seal` threshold encryption verified live on testnet** (open committee key server). Mainnet real-Seal awaits a public committee key server ("Available soon") or a signed-up provider |
+| Seal encryption | ✅ **real `@mysten/seal` threshold encryption verified live on mainnet** through a self-host independent key server. KeyServer object `0x033d6a353ee61f0ea172bf90c195be1da8154ff81e07f60787ab7c278553f951`, registration tx [`CXXMhN…`](https://suivision.xyz/txblock/CXXMhNYZgWNTTMEBiNhKMbc1YAuJ1y69SsMZF1y2RVVL). The public decentralized committee is still not self-serve |
 | Walrus Sites | 🟡 `walrus-site/` prepared; mainnet publish pending |
 
 Everything degrades to honest local fallbacks with zero credentials — it never fakes a public

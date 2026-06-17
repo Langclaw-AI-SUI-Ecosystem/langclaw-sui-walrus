@@ -97,7 +97,7 @@ Source modules:
 | Agent-handoff blobs (Walrus shared state) | ✅ **live** — same store → re-fetch → decrypt loop; e.g. blob `25sqhXLdWpMukoZ5snq-3uVi473W0X5aSNUtVanPIeo` |
 | MemWal | ✅ **live** — relayer `https://relayer.memory.walrus.xyz`; redacted pointer `remember → recall` round trip verified |
 | Sui memory anchor | ✅ **live on mainnet** — `memory_registry::record_memory` at package `0x7f3578ebe174b0343cd96391b2a1c75d5db4ad82c793650b3950bdb5634192e5` emits `MemoryRecorded` carrying the `walrus_blob_id`. Example tx [`aK7QiQdnbEXKtrHSZ5qifWcbfcBbu7UsFHsDjDFfR1H`](https://suivision.xyz/txblock/aK7QiQdnbEXKtrHSZ5qifWcbfcBbu7UsFHsDjDFfR1H) |
-| Seal | 🟡 local owner-gated AES envelope on mainnet; **real Seal SDK threshold encryption verified live on testnet** (open committee key server `0xb012378c…`). Mainnet real-Seal awaits a public committee key server (currently "Available soon") or a signed-up provider, then `SEAL_MOCK_MODE=false` + `SEAL_KEY_SERVER_OBJECT_IDS` |
+| Seal | ✅ **real Seal SDK threshold encryption verified live on mainnet** through a self-host independent key server. KeyServer object `0x033d6a353ee61f0ea172bf90c195be1da8154ff81e07f60787ab7c278553f951`, registration tx [`CXXMhNYZgWNTTMEBiNhKMbc1YAuJ1y69SsMZF1y2RVVL`](https://suivision.xyz/txblock/CXXMhNYZgWNTTMEBiNhKMbc1YAuJ1y69SsMZF1y2RVVL). The public decentralized committee is still not self-serve |
 
 The full audit chain anyone can reproduce with no local state:
 **on-chain tx → `MemoryRecorded` event → `walrus_blob_id` → aggregator GET → confirm the exact encrypted blob + its content hash.**
