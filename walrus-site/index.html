@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Langclaw · Verifiable Agent Memory on Walrus</title>
+    <meta
+      name="description"
+      content="A Walrus Site that reads a live Langclaw agent memory straight from Walrus — proof that agent memory is durable, portable, and auditable."
+    />
+    <style>
+      :root {
+        --bg: oklch(16% 0.02 245);
+        --bg-raised: oklch(21% 0.025 245);
+        --line: oklch(32% 0.03 245);
+        --text: oklch(94% 0.01 245);
+        --muted: oklch(72% 0.02 245);
+        --accent: oklch(78% 0.14 195);
+        --accent-2: oklch(72% 0.16 290);
+        --ok: oklch(80% 0.16 155);
+        --warn: oklch(82% 0.15 85);
+        --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+        --sans: "Inter", system-ui, -apple-system, sans-serif;
+        --r: 14px;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: var(--sans);
+        color: var(--text);
+        background:
+          radial-gradient(60rem 40rem at 85% -10%, oklch(30% 0.08 195 / 0.35), transparent 60%),
+          radial-gradient(50rem 40rem at -10% 110%, oklch(28% 0.08 290 / 0.3), transparent 55%),
+          var(--bg);
+        min-height: 100vh;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 980px; margin: 0 auto; padding: clamp(1.5rem, 1rem + 3vw, 4rem) 1.25rem 4rem; }
+      header { display: flex; flex-direction: column; gap: 0.75rem; }
+      .badge {
+        align-self: flex-start;
+        display: inline-flex; align-items: center; gap: 0.5rem;
+        font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.04em;
+        text-transform: uppercase; color: var(--accent);
+        border: 1px solid var(--line); border-radius: 999px;
+        padding: 0.35rem 0.7rem; background: oklch(78% 0.14 195 / 0.06);
+      }
+      .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 0 var(--ok); animation: pulse 2.4s infinite; }
+      @keyframes pulse { 0% { box-shadow: 0 0 0 0 oklch(80% 0.16 155 / 0.5); } 70% { box-shadow: 0 0 0 9px oklch(80% 0.16 155 / 0); } 100% { box-shadow: 0 0 0 0 oklch(80% 0.16 155 / 0); } }
+      h1 {
+        margin: 0; font-weight: 700; letter-spacing: -0.02em;
+        font-size: clamp(2rem, 1.2rem + 3.5vw, 3.4rem); line-height: 1.05;
+      }
+      h1 .grad { background: linear-gradient(100deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+      .lede { color: var(--muted); max-width: 60ch; font-size: 1.05rem; margin: 0.25rem 0 0; }
+      main { margin-top: clamp(2rem, 1.5rem + 3vw, 3.5rem); display: grid; gap: 1.25rem; }
+      .card {
+        background: linear-gradient(180deg, var(--bg-raised), oklch(19% 0.022 245));
+        border: 1px solid var(--line); border-radius: var(--r);
+        padding: clamp(1.1rem, 0.9rem + 1vw, 1.6rem);
+      }
+      .card h2 { margin: 0 0 0.2rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
+      .memory { position: relative; overflow: hidden; }
+      .memory::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; background: linear-gradient(var(--accent), var(--accent-2)); }
+      .memory .title { font-size: 1.35rem; font-weight: 650; letter-spacing: -0.01em; margin: 0.4rem 0 0.1rem; }
+      .memory .topic { color: var(--muted); font-style: italic; }
+      .reco { display: inline-block; margin-top: 0.8rem; font-family: var(--mono); font-size: 0.85rem; color: var(--warn); border: 1px dashed oklch(82% 0.15 85 / 0.5); border-radius: 8px; padding: 0.25rem 0.6rem; }
+      ul.bullets { margin: 0.9rem 0 0; padding-left: 1.1rem; color: var(--text); }
+      ul.bullets li { margin: 0.35rem 0; }
+      .notice { margin-top: 1rem; font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 0.8rem; }
+      .src { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); word-break: break-all; margin-top: 0.7rem; }
+      .src a { color: var(--accent); text-decoration: none; }
+      .src a:hover { text-decoration: underline; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0.85rem; }
+      .stat { background: oklch(19% 0.02 245); border: 1px solid var(--line); border-radius: 12px; padding: 0.9rem 1rem; transition: transform 150ms cubic-bezier(0.16,1,0.3,1), border-color 150ms; }
+      .stat:hover { transform: translateY(-2px); border-color: var(--accent); }
+      .stat .k { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+      .stat .v { font-weight: 650; margin-top: 0.25rem; }
+      .stat .meta { font-family: var(--mono); font-size: 0.74rem; color: var(--accent); word-break: break-all; margin-top: 0.3rem; }
+      .stat .meta a { color: inherit; text-decoration: none; }
+      .stat .meta a:hover { text-decoration: underline; }
+      .state { font-family: var(--mono); font-size: 0.85rem; color: var(--muted); display: flex; align-items: center; gap: 0.5rem; }
+      .skeleton { height: 0.95rem; border-radius: 6px; background: linear-gradient(90deg, var(--line), oklch(28% 0.03 245), var(--line)); background-size: 200% 100%; animation: shimmer 1.3s infinite; margin: 0.5rem 0; }
+      .skeleton.w70 { width: 70%; } .skeleton.w40 { width: 40%; }
+      @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+      footer { margin-top: 2.5rem; color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--line); padding-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; }
+      footer a { color: var(--accent); text-decoration: none; }
+      footer a:hover { text-decoration: underline; }
+      @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <span class="badge"><span class="dot" aria-hidden="true"></span> Walrus Site · reads live from Walrus</span>
+        <h1>Verifiable agent memory<br /><span class="grad">on Walrus</span></h1>
+        <p class="lede">
+          This page is hosted on Walrus and fetches a real Langclaw agent memory
+          straight from the public Walrus aggregator at load time — proof that
+          agent memory here is durable, portable, and independently auditable.
+        </p>
+      </header>
+
+      <main>
+        <section class="card memory" aria-labelledby="mem-h">
+          <h2 id="mem-h">Live memory · fetched from Walrus</h2>
+          <div id="memory">
+            <p class="state"><span class="dot" aria-hidden="true"></span> Fetching blob from Walrus aggregator…</p>
+            <div class="skeleton w70"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton w40"></div>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="ver-h">
+          <h2 id="ver-h">Verification - mainnet-ready memory path</h2>
+          <div class="grid">
+            <div class="stat">
+              <div class="k">Walrus storage</div>
+              <div class="v">Mainnet · http mode</div>
+              <div class="meta">aggregator.walrus-mainnet.walrus.space</div>
+            </div>
+            <div class="stat">
+              <div class="k">Seal privacy</div>
+              <div class="v">Configured by env</div>
+              <div class="meta">owner-gated · access_policy::seal_approve</div>
+            </div>
+            <div class="stat">
+              <div class="k">MemWal recall</div>
+              <div class="v">Live relayer</div>
+              <div class="meta">blob CC4rhZ01…1bHPw</div>
+            </div>
+            <div class="stat">
+              <div class="k">Sui anchor</div>
+              <div class="v">Pending publish</div>
+              <div class="meta"><a id="anchor" href="https://suivision.xyz" target="_blank" rel="noopener">Sui mainnet ↗</a></div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <span>Langclaw · Sui Walrus Track</span>
+        <a id="raw" href="#" target="_blank" rel="noopener">Raw blob (aggregator GET) ↗</a>
+        <a href="https://docs.wal.app/docs/sites" target="_blank" rel="noopener">Walrus Sites ↗</a>
+      </footer>
+    </div>
+
+    <script>
+      // The blob id of a deliberately-public demo memory (see scripts/walrus-public-demo.ts).
+      // Real user memories are Seal-encrypted; this one is public so the full
+      // store -> retrieve -> read loop is auditable with no key.
+      var AGGREGATOR = "https://aggregator.walrus-mainnet.walrus.space";
+      var BLOB_ID = "";
+      var url = BLOB_ID ? AGGREGATOR + "/v1/blobs/" + BLOB_ID : AGGREGATOR;
+
+      document.getElementById("raw").href = url;
+
+      function esc(s) {
+        return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+        });
+      }
+
+      function render(mem) {
+        var r = (mem && mem.report) || {};
+        var bullets = Array.isArray(r.bullets) ? r.bullets : [];
+        var html =
+          '<p class="topic">' + esc(mem.topic || "(no topic)") + "</p>" +
+          '<p class="title">' + esc(r.title || "Recalled memory") + "</p>" +
+          (r.recommendation ? '<span class="reco">recommendation · ' + esc(r.recommendation) + "</span>" : "") +
+          (bullets.length ? '<ul class="bullets">' + bullets.map(function (b) { return "<li>" + esc(b) + "</li>"; }).join("") + "</ul>" : "") +
+          (mem.notice ? '<p class="notice">' + esc(mem.notice) + "</p>" : "") +
+          '<p class="src">blob ' + esc(BLOB_ID) + ' · <a href="' + esc(url) + '" target="_blank" rel="noopener">read raw from Walrus ↗</a></p>';
+        document.getElementById("memory").innerHTML = html;
+      }
+
+      function fail(msg) {
+        document.getElementById("memory").innerHTML =
+          '<p class="state">⚠ Could not read the blob from Walrus: ' + esc(msg) +
+          '. The site renders honestly instead of faking data.</p>' +
+          '<p class="src"><a href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(url) + " ↗</a></p>";
+      }
+
+      if (!BLOB_ID) {
+        document.getElementById("memory").innerHTML =
+          '<p class="state"><span class="dot" aria-hidden="true"></span> Mainnet public demo blob is pending.</p>' +
+          '<p class="src">Publish a public demo blob on Walrus mainnet, then set BLOB_ID in this file.</p>';
+        document.getElementById("raw").removeAttribute("href");
+      } else {
+      fetch(url)
+        .then(function (res) {
+          if (!res.ok) throw new Error("aggregator returned " + res.status);
+          return res.json();
+        })
+        .then(render)
+        .catch(function (e) { fail(e && e.message ? e.message : "network error"); });
+      }
+    </script>
+  </body>
+</html>

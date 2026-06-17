@@ -1,0 +1,23 @@
+{
+  "headers": {
+    "/index.html": {
+      "Cache-Control": "max-age=3600",
+      "Content-Type": "text/html; charset=utf-8"
+    }
+  },
+  "routes": {
+    "/*": "/index.html"
+  },
+  "metadata": {
+    "link": "https://docs.wal.app/docs/sites",
+    "image_url": null,
+    "description": "A Walrus Site that reads a live Langclaw agent memory straight from Walrus. Hosted on Walrus, data from Walrus.",
+    "project_url": null,
+    "creator": "Langclaw"
+  },
+  "site_name": "Langclaw — Verifiable Agent Memory on Walrus",
+  "object_id": "0x6e3848cd8e3d4ed551d521d75a774971d1f6cdee1e38edd258847cc375413051",
+  "ignore": [
+    "/PUBLISH.md"
+  ]
+}

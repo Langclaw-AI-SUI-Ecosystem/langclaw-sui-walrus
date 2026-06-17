@@ -1,0 +1,48 @@
+# ---- Secrets / env (NEVER commit) ----
+.env
+.env.*
+!.env.example
+*.local
+**/.env
+**/.env.*
+!**/.env.example
+*.keystore
+**/*.keystore
+sui.keystore
+client_config.yaml
+
+# ---- Local runtime state ----
+.langclaw-state/
+**/.langclaw-state/
+
+# ---- Dependencies ----
+node_modules/
+**/node_modules/
+.pnpm-store/
+
+# ---- Build output ----
+dist/
+**/dist/
+.next/
+**/.next/
+out/
+build/
+move/**/build/
+
+# ---- Logs / tmp ----
+*.log
+npm-debug.log*
+.DS_Store
+*.tsbuildinfo
+coverage/
+
+# ---- Editor ----
+.vscode/
+.idea/
+
+# ---- Local agent/harness tooling (not part of the project) ----
+.claude/
+.agents/
+.codex/
+.cursor/
+MEMORY.md
