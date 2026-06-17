@@ -77,6 +77,10 @@ npm run check:walrus-readiness  # adapters report ready / http live mode
 npm run demo:walrus-public      # publish a PUBLIC sample memory, then read it back
 npm run smoke:memwal            # live MemWal remember → recall round trip
 node --import tsx --env-file=.env scripts/walrus-mainnet-proof.ts "your topic"
+
+# Real Seal threshold encryption round trip (testnet committee/independent key server):
+#   see backend/.env.example "Real Seal" block for the verified testnet config, then:
+node --import tsx --env-file=.env scripts/seal-roundtrip-proof.ts
 ```
 
 ---
@@ -101,8 +105,8 @@ node --import tsx --env-file=.env scripts/walrus-mainnet-proof.ts "your topic"
 | Walrus blob storage | ✅ **live on mainnet** (own publisher daemon + public aggregator) |
 | MemWal semantic recall | ✅ **live** (`relayer.memory.walrus.xyz`) |
 | Store → read-back → hash-verify | ✅ **live**, `hashVerified: true` |
-| Seal encryption | 🟡 local owner-gated AES envelope (real `@mysten/seal` activates with mainnet `SEAL_MOCK_MODE=false` + key-server ids) |
-| Sui memory anchor | 🟡 metadata-only pointer; on-chain `MemoryRecorded` event activates with `SUI_REGISTRY_ENABLED=true` |
+| Sui memory anchor | ✅ **live on mainnet** — `MemoryRecorded` event at package `0x7f3578eb…` carries the `walrus_blob_id`; e.g. tx [`aK7QiQ…`](https://suivision.xyz/txblock/aK7QiQdnbEXKtrHSZ5qifWcbfcBbu7UsFHsDjDFfR1H) |
+| Seal encryption | 🟡 owner-gated AES envelope on mainnet; **real `@mysten/seal` threshold encryption verified live on testnet** (open committee key server). Mainnet real-Seal awaits a public committee key server ("Available soon") or a signed-up provider |
 | Walrus Sites | 🟡 `walrus-site/` prepared; mainnet publish pending |
 
 Everything degrades to honest local fallbacks with zero credentials — it never fakes a public

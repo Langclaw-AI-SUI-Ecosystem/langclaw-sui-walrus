@@ -93,11 +93,14 @@ Source modules:
 
 | Layer | Evidence |
 | --- | --- |
-| Walrus memory blobs | mainnet aggregator configured; public writes require `WALRUS_PUBLISHER_URL` to point at an authenticated publisher or upload relay |
-| Agent-handoff blobs (Walrus shared state) | same store, re-fetch, decrypt loop; live public mode activates after publisher config |
-| Seal | local envelope fallback by default; real Seal activates after mainnet `SEAL_PACKAGE_ID` and key server object ids are configured |
-| MemWal | optional relayer `https://relayer.memory.walrus.xyz`; redacted pointer recall only |
-| Sui memory anchor | pending mainnet `memory_registry` publish and `SUI_REGISTRY_PACKAGE_ID` config |
+| Walrus memory blobs | ✅ **live on mainnet** — own publisher daemon + public aggregator; `storageStatus: uploaded`, `hashVerified: true`. Example blob `o-FHoM1krsuEWyJZ6LrWkN2OhNqs5_k5PCFRaroFiu4` |
+| Agent-handoff blobs (Walrus shared state) | ✅ **live** — same store → re-fetch → decrypt loop; e.g. blob `25sqhXLdWpMukoZ5snq-3uVi473W0X5aSNUtVanPIeo` |
+| MemWal | ✅ **live** — relayer `https://relayer.memory.walrus.xyz`; redacted pointer `remember → recall` round trip verified |
+| Sui memory anchor | ✅ **live on mainnet** — `memory_registry::record_memory` at package `0x7f3578ebe174b0343cd96391b2a1c75d5db4ad82c793650b3950bdb5634192e5` emits `MemoryRecorded` carrying the `walrus_blob_id`. Example tx [`aK7QiQdnbEXKtrHSZ5qifWcbfcBbu7UsFHsDjDFfR1H`](https://suivision.xyz/txblock/aK7QiQdnbEXKtrHSZ5qifWcbfcBbu7UsFHsDjDFfR1H) |
+| Seal | 🟡 local owner-gated AES envelope on mainnet; **real Seal SDK threshold encryption verified live on testnet** (open committee key server `0xb012378c…`). Mainnet real-Seal awaits a public committee key server (currently "Available soon") or a signed-up provider, then `SEAL_MOCK_MODE=false` + `SEAL_KEY_SERVER_OBJECT_IDS` |
+
+The full audit chain anyone can reproduce with no local state:
+**on-chain tx → `MemoryRecorded` event → `walrus_blob_id` → aggregator GET → confirm the exact encrypted blob + its content hash.**
 
 Full tables: [`backend/README.md`](backend/README.md) → "Current Walrus Verification".
 
