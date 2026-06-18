@@ -2,10 +2,12 @@
 .env
 .env.*
 !.env.example
+!.env.mainnet.example
 *.local
 **/.env
 **/.env.*
 !**/.env.example
+!**/.env.mainnet.example
 *.keystore
 **/*.keystore
 sui.keystore

@@ -110,14 +110,16 @@ Full tables: [`backend/README.md`](backend/README.md) → "Current Walrus Verifi
 
 ```bash
 cd backend
-cp .env.example .env          # then fill Walrus + Seal + MemWal vars (see README)
 
-npm run check:walrus-readiness   # all adapters report ready / live mode
+npm run verify:public-proof      # no private keys; checks submitted public proof
+
+# Operator mainnet path. Fill only secret placeholders before live writes.
+cp .env.mainnet.example .env
+npm run check:walrus-readiness:mainnet
 npm run smoke:memwal             # live MemWal remember → recall round trip
 npm run demo:walrus-public       # publish a PUBLIC sample memory you can read in full
 npm run proof:walrus-mainnet -- "your topic"
 npm run proof:seal
-npm run verify:public-proof
 
 # Read a live PUBLIC demo memory's full content straight from Walrus (no key):
 curl -s https://aggregator.walrus-mainnet.walrus.space/v1/blobs/<public_blob_id>
@@ -144,7 +146,8 @@ curl -s https://aggregator.walrus-mainnet.walrus.space/v1/blobs/<walrus_blob_id>
   never fakes a public blob URL or an on-chain tx.
 - **Walrus Sites:** `walrus-site/` is published on mainnet as object
   `0x423a0cf7bfa109ed48ae6fae63eead7b7eae751b0885925b137bfd1d9e597d2b`.
-  Deployment metadata lives in `walrus-site/PUBLISH.md`.
+  Deployment metadata lives in `walrus-site/PUBLISH.md`. A public `wal.app`
+  route needs a SuiNS name pointed at that site object.
 - **Sui Stack Messaging — not used (deliberate):** agent handoffs use durable,
   auditable Walrus blobs instead of ephemeral messages; live agent-to-agent
   channels via Stack Messaging are a candidate future integration.

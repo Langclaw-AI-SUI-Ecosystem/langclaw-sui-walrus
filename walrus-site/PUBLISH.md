@@ -10,7 +10,8 @@ Walrus aggregator.
 - Site object ID: `0x423a0cf7bfa109ed48ae6fae63eead7b7eae751b0885925b137bfd1d9e597d2b`
 - Base36 site ID: `1nf7tlsp8yjmph7uq952gzp2r81wyayaqyinfeosgsw2ef2r6z`
 - Local portal URL: `http://1nf7tlsp8yjmph7uq952gzp2r81wyayaqyinfeosgsw2ef2r6z.localhost:3000`
-- Public `wal.app` URL requires a SuiNS name that points to the site object.
+- Public `wal.app` URL status: pending SuiNS routing. The site object is live,
+  but a public portal route requires a SuiNS name that points to the site object.
 - Owner:
   `0x4b635af81752a2bcdaeb908bd522173ad1c86a859a9c56ee59d3089c35e0a622`
 
@@ -53,6 +54,17 @@ Convert the object ID to base36 when needed:
 ```bash
 site-builder --context=mainnet convert <mainnet_site_object_id>
 ```
+
+## Public route checklist
+
+Before final submission, assign a SuiNS name to the site object, then add the
+resulting `https://<name>.wal.app` URL to:
+
+- `README.md`
+- `WALRUS_TRACK.md`
+- `backend/docs/HACKATHON_SUBMISSION.md`
+
+Do not claim a public `wal.app` URL in the submission until this route resolves.
 
 ## Notes
 
