@@ -138,4 +138,4 @@ Public proof, without private keys:
 cd backend && npm run verify:public-proof
 ```
 
-Live app: [langclaw.43-129-56-85.sslip.io](https://langclaw.43-129-56-85.sslip.io)
+Live app: [langclaw-sui-walrus.vercel.app](https://langclaw-sui-walrus.vercel.app)
