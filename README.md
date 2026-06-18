@@ -106,8 +106,8 @@ node --import tsx --env-file=.env scripts/seal-roundtrip-proof.ts
 | MemWal semantic recall | ✅ **live** (`relayer.memory.walrus.xyz`) |
 | Store → read-back → hash-verify | ✅ **live**, `hashVerified: true` |
 | Sui memory anchor | ✅ **live on mainnet** — `MemoryRecorded` event at package `0x7f3578eb…` carries the `walrus_blob_id`; e.g. tx [`aK7QiQ…`](https://suivision.xyz/txblock/aK7QiQdnbEXKtrHSZ5qifWcbfcBbu7UsFHsDjDFfR1H) |
-| Seal encryption | ✅ **real `@mysten/seal` threshold encryption verified live on mainnet** through a self-host independent key server. KeyServer object `0x033d6a353ee61f0ea172bf90c195be1da8154ff81e07f60787ab7c278553f951`, registration tx [`CXXMhN…`](https://suivision.xyz/txblock/CXXMhNYZgWNTTMEBiNhKMbc1YAuJ1y69SsMZF1y2RVVL). The public decentralized committee is still not self-serve |
-| Walrus Sites | 🟡 `walrus-site/` prepared; mainnet publish pending |
+| Seal encryption | ✅ **real `@mysten/seal` threshold encryption verified live on mainnet** through a self-hosted Open mode server. KeyServer object [`0x86b608dc…`](https://suivision.xyz/object/0x86b608dcb3fcb9c629cfe6d865681977d1decb219a2eb98eb6058b87377feaf3), registration tx [`5dbnWf…`](https://suivision.xyz/txblock/5dbnWfCpMY1aWALrayaDkWAiBH5TSFYWdhERbxFfRxV1) |
+| Walrus Sites | ✅ **published on mainnet** as site object [`0x423a0cf7…`](https://suivision.xyz/object/0x423a0cf7bfa109ed48ae6fae63eead7b7eae751b0885925b137bfd1d9e597d2b) |
 
 Everything degrades to honest local fallbacks with zero credentials — it never fakes a public
 blob URL or an on-chain tx. Real user memories are Seal-encrypted and owner-gated; only
@@ -131,3 +131,11 @@ cd frontend && pnpm install && pnpm dev
 
 See [`backend/README.md`](backend/README.md) and [`frontend/README.md`](frontend/README.md)
 for env vars, routes, and contracts, and [`CLAUDE.md`](CLAUDE.md) for the architecture map.
+
+Public proof, without private keys:
+
+```bash
+cd backend && npm run verify:public-proof
+```
+
+Live app: [langclaw.43-129-56-85.sslip.io](https://langclaw.43-129-56-85.sslip.io)

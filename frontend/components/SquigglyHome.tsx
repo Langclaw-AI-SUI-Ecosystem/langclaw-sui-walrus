@@ -10,6 +10,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import {
+  MAINNET_ARTIFACTS,
+  suiObjectUrl,
+  suiTxUrl,
+} from "@/lib/mainnet-artifacts";
 
 const proofLayerRows: Array<{
   href?: string;
@@ -20,40 +25,46 @@ const proofLayerRows: Array<{
   {
     label: "Langclaw package",
     meta: "Registry, journal, vault, memory modules",
-    value: "Configure mainnet package",
+    value: MAINNET_ARTIFACTS.packageId,
+    href: suiObjectUrl(MAINNET_ARTIFACTS.packageId),
   },
   {
     label: "LangclawUsageVault",
     meta: "SUI usage vault",
-    value: "Configure mainnet vault",
+    value: MAINNET_ARTIFACTS.vaultId,
+    href: suiObjectUrl(MAINNET_ARTIFACTS.vaultId),
   },
   {
     label: "Langclaw agent ID",
     meta: "Registered agent identity",
-    value: "133",
+    value: MAINNET_ARTIFACTS.agentId,
   },
   {
     label: "Agent owner / recorder",
     meta: "Proof writer wallet",
-    value: "Mainnet wallet required",
+    value: MAINNET_ARTIFACTS.recorder,
+    href: suiObjectUrl(MAINNET_ARTIFACTS.recorder),
   },
 ];
 
 const deploymentRows: Array<{ href?: string; label: string; value: string }> = [
   {
     label: "Package publish",
-    value: "Required on mainnet",
+    value: MAINNET_ARTIFACTS.packageTx,
+    href: suiTxUrl(MAINNET_ARTIFACTS.packageTx),
   },
   {
     label: "Usage vault setup",
-    value: "Required on mainnet",
+    value: MAINNET_ARTIFACTS.vaultTx,
+    href: suiTxUrl(MAINNET_ARTIFACTS.vaultTx),
   },
 ];
 
 const decisionRows: Array<{ href?: string; label: string; signal: string }> = [
   {
-    label: "Decision 1",
-    signal: "mainnet proof pending",
+    label: "Private memory anchor",
+    signal: "mainnet confirmed",
+    href: suiTxUrl(MAINNET_ARTIFACTS.decisionTx),
   },
 ];
 
@@ -64,12 +75,11 @@ export function SquigglyHome() {
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-4">
             <h2 className="max-w-3xl text-balance font-semibold text-3xl tracking-normal md:text-5xl">
-              Built for a Sui mainnet proof layer.
+              A live Walrus, Seal, and Sui proof layer.
             </h2>
             <p className="max-w-2xl text-muted-foreground leading-7">
-              Langclaw records decision hashes, evidence URIs, signal types,
-              recorder wallets, and Strategy Lab outcomes through live Sui
-              contracts that users can inspect after a run.
+              Langclaw encrypts private research with Seal, stores the ciphertext
+              on Walrus, and records the content hash through live Sui contracts.
             </p>
           </div>
 
@@ -82,12 +92,12 @@ export function SquigglyHome() {
             <ProofPillar
               icon={<FileCheck2Icon aria-hidden="true" />}
               title="Contract backed"
-              text="Registry, usage vault, and trading journal contracts are configured for Sui mainnet."
+              text="Registry, memory, access policy, and usage vault modules are live on Sui mainnet."
             />
             <ProofPillar
               icon={<LockKeyholeIcon aria-hidden="true" />}
-              title="No custody"
-              text="The hackathon build evaluates signals without live-funds execution."
+              title="Owner-only recall"
+              text="The Seal access policy checks the connected wallet before decryption."
             />
           </div>
 
@@ -113,8 +123,7 @@ export function SquigglyHome() {
               <div>
                 <p className="font-semibold">Sui mainnet proof layer</p>
                 <p className="mt-1 text-muted-foreground text-sm">
-                  Sui mainnet, agent ID 133, and mainnet package and object IDs
-                  from backend configuration.
+                  Live package, vault, recorder, and transaction references.
                 </p>
               </div>
               <Badge variant="secondary">Sui</Badge>

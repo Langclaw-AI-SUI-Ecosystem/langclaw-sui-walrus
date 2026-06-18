@@ -13,6 +13,12 @@ import {
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import {
+  MAINNET_ARTIFACTS,
+  suiObjectUrl,
+  suiTxUrl,
+  walrusBlobUrl,
+} from "@/lib/mainnet-artifacts";
+import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
@@ -21,31 +27,33 @@ import {
 
 const evidenceRows = [
   {
-    title: "Smart-money flow",
-    value: "+18.4% net accumulation",
+    title: "Walrus storage",
+    value: "Encrypted memory blob is publicly retrievable",
     status: "verified",
   },
   {
-    title: "Liquidity anomaly",
-    value: "2.7x baseline volume",
-    status: "review",
+    title: "Seal privacy",
+    value: "Owner-gated mainnet key server round-trip",
+    status: "verified",
   },
   {
-    title: "Source gaps",
-    value: "Nansen fallback unavailable",
-    status: "gap",
+    title: "Sui proof",
+    value: "Memory hash anchored in a mainnet transaction",
+    status: "verified",
   },
 ];
 
 const identityChips: Array<{ href?: string; label: string; value: string }> = [
-  { label: "Sui network", value: "mainnet" },
+  { label: "Walrus network", value: "mainnet" },
   {
     label: "Package ID",
-    value: "Set in env",
+    value: `${MAINNET_ARTIFACTS.packageId.slice(0, 8)}...${MAINNET_ARTIFACTS.packageId.slice(-6)}`,
+    href: suiObjectUrl(MAINNET_ARTIFACTS.packageId),
   },
   {
-    label: "Agent ID",
-    value: "#133",
+    label: "Proof transaction",
+    value: `${MAINNET_ARTIFACTS.memoryTx.slice(0, 8)}...${MAINNET_ARTIFACTS.memoryTx.slice(-6)}`,
+    href: suiTxUrl(MAINNET_ARTIFACTS.memoryTx),
   },
 ];
 
@@ -57,12 +65,11 @@ export default function Hero() {
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-5">
             <h1 className="max-w-3xl text-balance font-semibold text-4xl tracking-normal md:text-5xl md:leading-[1.04]">
-              Sui intelligence for source-backed alpha decisions.
+              Private AI memory on Walrus, verified on Sui.
             </h1>
             <p className="max-w-2xl text-base text-muted-foreground leading-7 md:text-lg">
-              Analyze smart-money flow, liquidity anomalies, protocol momentum,
-              Strategy Lab backtests, and on-chain proof records from one
-              wallet-authenticated workspace.
+              Langclaw recalls prior research, encrypts new memory with Seal,
+              stores it on Walrus, and anchors its hash on Sui mainnet.
             </p>
           </div>
 
@@ -75,7 +82,7 @@ export default function Hero() {
                 aria-label="Research prompt"
                 className="h-14 text-base"
                 name="q"
-                placeholder="Detect liquidity anomaly on a Sui pair..."
+                placeholder="Research Sui liquidity and remember the findings..."
               />
               <InputGroupAddon align="inline-end">
                 <InputGroupButton size="sm" type="submit" variant="default">
@@ -89,7 +96,7 @@ export default function Hero() {
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button asChild size="lg">
               <Link href="/chat">
-                Open Research
+                Run private research
                 <ArrowRightIcon data-icon="inline-end" />
               </Link>
             </Button>
@@ -155,7 +162,7 @@ function ResearchPreview() {
       <div className="flex items-center justify-between border-b px-4 py-3">
         <div className="flex items-center gap-2">
           <span className="size-2 rounded-full bg-primary" />
-          <span className="font-medium text-sm">Research Intelligence Console</span>
+          <span className="font-medium text-sm">Verifiable Memory Console</span>
         </div>
         <Badge variant="outline">Sui mainnet</Badge>
       </div>
@@ -165,15 +172,14 @@ function ResearchPreview() {
           <div className="rounded-lg border bg-muted/30 p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <p className="font-medium">Liquidity anomaly brief</p>
+                <p className="font-medium">Private research memory</p>
                 <p className="text-muted-foreground text-sm">
-                  Pair activity is above local baseline with partial provider
-                  coverage.
+                  Research output is encrypted before it reaches Walrus.
                 </p>
               </div>
               <Badge variant="secondary">
                 <CheckCircle2Icon data-icon="inline-start" />
-                source-backed
+                mainnet verified
               </Badge>
             </div>
           </div>
@@ -196,36 +202,23 @@ function ResearchPreview() {
           <div className="rounded-lg border bg-background p-4">
             <div className="mb-4 flex items-center justify-between gap-3">
               <div>
-                <p className="font-medium text-sm">Sui liquidity trend</p>
+                <p className="font-medium text-sm">Public proof artifact</p>
                 <p className="text-muted-foreground text-xs">
-                  Indexed 24h movement
+                  Inspect the blob without trusting this interface
                 </p>
               </div>
-              <span className="font-mono text-primary text-xs">+27.8%</span>
+              <a
+                className="inline-flex items-center gap-1 font-mono text-primary text-xs hover:underline"
+                href={walrusBlobUrl(MAINNET_ARTIFACTS.publicBlobId)}
+                rel="noreferrer"
+                target="_blank"
+              >
+                Open blob <ExternalLinkIcon className="size-3" />
+              </a>
             </div>
-            <svg
-              aria-label="Liquidity trend preview"
-              className="h-24 w-full"
-              role="img"
-              viewBox="0 0 520 128"
-            >
-              <path
-                d="M0 96 C70 84 92 100 136 76 C184 50 220 62 262 48 C314 30 350 48 388 28 C432 4 470 18 520 10"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeWidth="4"
-                className="text-primary"
-              />
-              <path
-                d="M0 118 C80 112 122 105 170 94 C238 79 292 70 350 58 C422 42 474 35 520 30"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeWidth="2"
-                className="text-muted-foreground/35"
-              />
-            </svg>
+            <code className="block break-all rounded-md bg-muted p-3 text-xs">
+              {MAINNET_ARTIFACTS.publicBlobId}
+            </code>
           </div>
         </div>
 
@@ -234,17 +227,17 @@ function ResearchPreview() {
             <ConsoleSideItem
               icon={<ShieldCheckIcon aria-hidden="true" />}
               label="Proof status"
-              value="Decision hash ready"
+              value="Sui mainnet anchor confirmed"
             />
             <ConsoleSideItem
               icon={<DatabaseIcon aria-hidden="true" />}
               label="Evidence"
-              value="DEX rows, TVL, yield context"
+              value="Walrus blob and content hash"
             />
             <ConsoleSideItem
               icon={<TriangleAlertIcon aria-hidden="true" />}
-              label="Source gaps"
-              value="Shown instead of hidden"
+              label="Privacy"
+              value="Seal owner policy enforced"
             />
           </div>
         </aside>

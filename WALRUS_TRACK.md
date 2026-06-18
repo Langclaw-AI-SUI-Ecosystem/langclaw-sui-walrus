@@ -97,7 +97,7 @@ Source modules:
 | Agent-handoff blobs (Walrus shared state) | ✅ **live** — same store → re-fetch → decrypt loop; e.g. blob `25sqhXLdWpMukoZ5snq-3uVi473W0X5aSNUtVanPIeo` |
 | MemWal | ✅ **live** — relayer `https://relayer.memory.walrus.xyz`; redacted pointer `remember → recall` round trip verified |
 | Sui memory anchor | ✅ **live on mainnet** — `memory_registry::record_memory` at package `0x7f3578ebe174b0343cd96391b2a1c75d5db4ad82c793650b3950bdb5634192e5` emits `MemoryRecorded` carrying the `walrus_blob_id`. Example tx [`aK7QiQdnbEXKtrHSZ5qifWcbfcBbu7UsFHsDjDFfR1H`](https://suivision.xyz/txblock/aK7QiQdnbEXKtrHSZ5qifWcbfcBbu7UsFHsDjDFfR1H) |
-| Seal | ✅ **real Seal SDK threshold encryption verified live on mainnet** through a self-host independent key server. KeyServer object `0x033d6a353ee61f0ea172bf90c195be1da8154ff81e07f60787ab7c278553f951`, registration tx [`CXXMhNYZgWNTTMEBiNhKMbc1YAuJ1y69SsMZF1y2RVVL`](https://suivision.xyz/txblock/CXXMhNYZgWNTTMEBiNhKMbc1YAuJ1y69SsMZF1y2RVVL). The public decentralized committee is still not self-serve |
+| Seal | ✅ **real Seal SDK threshold encryption verified live on mainnet** through a self-hosted Open mode server. KeyServer object [`0x86b608dc…`](https://suivision.xyz/object/0x86b608dcb3fcb9c629cfe6d865681977d1decb219a2eb98eb6058b87377feaf3), registration tx [`5dbnWf…`](https://suivision.xyz/txblock/5dbnWfCpMY1aWALrayaDkWAiBH5TSFYWdhERbxFfRxV1) |
 
 The full audit chain anyone can reproduce with no local state:
 **on-chain tx → `MemoryRecorded` event → `walrus_blob_id` → aggregator GET → confirm the exact encrypted blob + its content hash.**
@@ -115,8 +115,9 @@ cp .env.example .env          # then fill Walrus + Seal + MemWal vars (see READM
 npm run check:walrus-readiness   # all adapters report ready / live mode
 npm run smoke:memwal             # live MemWal remember → recall round trip
 npm run demo:walrus-public       # publish a PUBLIC sample memory you can read in full
-node --import tsx --env-file=.env scripts/walrus-mainnet-proof.ts "your topic"
-node --import tsx --env-file=.env scripts/seal-roundtrip-proof.ts
+npm run proof:walrus-mainnet -- "your topic"
+npm run proof:seal
+npm run verify:public-proof
 
 # Read a live PUBLIC demo memory's full content straight from Walrus (no key):
 curl -s https://aggregator.walrus-mainnet.walrus.space/v1/blobs/<public_blob_id>
@@ -141,9 +142,9 @@ curl -s https://aggregator.walrus-mainnet.walrus.space/v1/blobs/<walrus_blob_id>
 - **Local fallback:** with no credentials the whole flow still runs against
   on-disk/AES fallbacks and reports `walrusStorageMode: local` honestly — it
   never fakes a public blob URL or an on-chain tx.
-- **Walrus Sites:** the main app is Next.js, but `walrus-site/` is prepared for
-  a mainnet Walrus Site publish. Mainnet publish is pending funded mainnet SUI
-  and WAL plus `site-builder --context=mainnet deploy`.
+- **Walrus Sites:** `walrus-site/` is published on mainnet as object
+  `0x423a0cf7bfa109ed48ae6fae63eead7b7eae751b0885925b137bfd1d9e597d2b`.
+  Deployment metadata lives in `walrus-site/PUBLISH.md`.
 - **Sui Stack Messaging — not used (deliberate):** agent handoffs use durable,
   auditable Walrus blobs instead of ephemeral messages; live agent-to-agent
   channels via Stack Messaging are a candidate future integration.

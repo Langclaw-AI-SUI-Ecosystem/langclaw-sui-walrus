@@ -34,23 +34,14 @@ SUI_REGISTRY_ENABLED=true
 SUI_REGISTRY_PACKAGE_ID=<packageId>
 SEAL_MOCK_MODE=false
 SEAL_PACKAGE_ID=<packageId>
-SEAL_KEY_SERVER_OBJECT_IDS=<provider-issued-mainnet-key-server-object-id>
-SEAL_KEY_SERVER_API_KEY_NAME=<provider-api-key-header-name>
-SEAL_KEY_SERVER_API_KEY=<provider-api-key>
+SEAL_KEY_SERVER_OBJECT_IDS=0x86b608dcb3fcb9c629cfe6d865681977d1decb219a2eb98eb6058b87377feaf3
 SEAL_THRESHOLD=1
+SEAL_STRICT_MODE=true
 ```
 
-The public decentralized committee key server for mainnet is not self-serve yet.
-Use a verified independent mainnet provider such as Enoki, Ruby Nodes,
-NodeInfra, Overclock, Studio Mirai, H2O Nodes, Triton One, or Natsai. If you use
-multiple providers, configure `SEAL_KEY_SERVER_CONFIGS_JSON` so each provider can
-carry its own object id, weight, and auth values.
-
-Self-host Open mode is also valid for a local or controlled demo. Register an
-independent key server with the official Seal `key_server` package, run the
-server with the matching master key, then set `SEAL_KEY_SERVER_OBJECT_IDS` to
-that KeyServer object id. Open mode does not need API key env vars. Use a stable
-public HTTPS URL if the demo must work outside the local machine.
+The configured object is a live, self-hosted Open mode KeyServer on mainnet.
+Open mode does not need API key variables. The server uses a stable HTTPS URL,
+and its master key stays outside source control.
 
 ## How the backend uses it
 
@@ -61,3 +52,11 @@ public HTTPS URL if the demo must work outside the local machine.
 3. A later related run decrypts prior memories via Seal — key servers dry-run
    `access_policy::seal_approve` to enforce owner-only access — and feeds them to
    the LLM agent for durable private recall.
+
+## Tests
+
+```bash
+sui move test
+```
+
+The suite checks memory event emission, owner access, and non-owner rejection.

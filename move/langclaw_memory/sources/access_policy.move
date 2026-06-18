@@ -16,4 +16,20 @@ module langclaw_memory::access_policy {
     entry fun seal_approve(id: vector<u8>, ctx: &TxContext) {
         assert!(ctx.sender() == address::from_bytes(id), ENoAccess);
     }
+
+    #[test]
+    fun owner_is_approved() {
+        let owner = @0xA;
+        let mut scenario = sui::test_scenario::begin(owner);
+        seal_approve(address::to_bytes(owner), scenario.ctx());
+        scenario.end();
+    }
+
+    #[test, expected_failure(abort_code = ENoAccess)]
+    fun non_owner_is_rejected() {
+        let owner = @0xA;
+        let mut scenario = sui::test_scenario::begin(@0xB);
+        seal_approve(address::to_bytes(owner), scenario.ctx());
+        scenario.end();
+    }
 }

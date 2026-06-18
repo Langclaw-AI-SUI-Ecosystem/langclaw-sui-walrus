@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { UserUsageBar } from "@/components/user-usage-bar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

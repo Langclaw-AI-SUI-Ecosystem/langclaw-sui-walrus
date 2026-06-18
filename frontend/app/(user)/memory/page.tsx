@@ -5,7 +5,9 @@ import {
   AlertCircle,
   BrainCircuit,
   Database,
+  ExternalLink,
   Loader2,
+  LockKeyhole,
   RefreshCw,
   ShieldCheck,
   ToggleLeft,
@@ -32,6 +34,7 @@ import {
   type MemoryItem,
   type MemoryStats,
   type MemoryStatus,
+  type VerifiableMemoryItem,
 } from "@/lib/langclaw-api";
 import { MemoryDataTable } from "./data-table";
 
@@ -39,6 +42,9 @@ export default function Page() {
   const { getWalletAuth, isConnected, isSigning, openWalletModal } =
     useWalletSession();
   const [memories, setMemories] = useState<MemoryItem[]>([]);
+  const [verifiableMemories, setVerifiableMemories] = useState<
+    VerifiableMemoryItem[]
+  >([]);
   const [backendStats, setBackendStats] = useState<MemoryStats | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState("");
@@ -81,6 +87,7 @@ export default function Page() {
   const loadMemories = useCallback(async () => {
     if (!isConnected) {
       setMemories([]);
+      setVerifiableMemories([]);
       setBackendStats(null);
       setError("");
       return;
@@ -93,6 +100,7 @@ export default function Page() {
       const wallet = await getWalletAuth();
       const dashboard = await getMemoryDashboard(wallet);
       setMemories(dashboard.memories);
+      setVerifiableMemories(dashboard.verifiableMemories);
       setBackendStats(dashboard.stats);
     } catch (err) {
       const message = readFriendlyError(err, "Unable to load memories.");
@@ -236,8 +244,8 @@ export default function Page() {
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl font-bold">Memory</h1>
           <p className="max-w-2xl text-sm text-muted-foreground">
-            Manage what Langclaw remembers, where each memory applies, and whether
-            it can be reused in future conversations.
+            Inspect private research memories stored on Walrus, protected by
+            Seal, and anchored on Sui. Recall preferences remain manageable below.
           </p>
         </div>
 
@@ -294,14 +302,91 @@ export default function Page() {
         })}
       </section>
 
-      <MemoryDataTable
-        data={memories}
-        disabled={!isConnected || busy}
-        onDelete={handleDelete}
-        onDeleteMany={handleDeleteMany}
-        onStatusChange={handleStatusChange}
-        onStatusChangeMany={handleStatusChangeMany}
-      />
+      <section className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-lg font-semibold">Verifiable Walrus memory</h2>
+          <p className="text-sm text-muted-foreground">
+            Each record links encrypted storage to its content hash and Sui proof.
+          </p>
+        </div>
+
+        {verifiableMemories.length ? (
+          <div className="grid gap-4 lg:grid-cols-2">
+            {verifiableMemories.map((memory) => (
+              <Card key={memory.id}>
+                <CardHeader>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <CardTitle className="truncate">{memory.topic}</CardTitle>
+                      <CardDescription>
+                        {new Date(memory.createdAt).toLocaleString()}
+                      </CardDescription>
+                    </div>
+                    <LockKeyhole className="size-4 shrink-0 text-emerald-500" />
+                  </div>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-3 text-sm">
+                  <ProofValue label="Walrus blob" value={memory.walrusBlobId} />
+                  <ProofValue label="Content hash" value={memory.contentHash} />
+                  <ProofValue label="Seal policy" value={memory.sealPolicyId} />
+                  <div className="flex flex-wrap gap-2">
+                    {memory.walrusBlobUrl && (
+                      <Button asChild size="sm" variant="outline">
+                        <a href={memory.walrusBlobUrl} rel="noreferrer" target="_blank">
+                          Open Walrus <ExternalLink className="size-3" />
+                        </a>
+                      </Button>
+                    )}
+                    {memory.suiTxUrl && (
+                      <Button asChild size="sm" variant="outline">
+                        <a href={memory.suiTxUrl} rel="noreferrer" target="_blank">
+                          Verify on Sui <ExternalLink className="size-3" />
+                        </a>
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <Card>
+            <CardContent className="py-8 text-sm text-muted-foreground">
+              No private research memory exists for this wallet yet. Run a research
+              task to create the first encrypted Walrus record.
+            </CardContent>
+          </Card>
+        )}
+      </section>
+
+      <section className="flex flex-col gap-2">
+        <div>
+          <h2 className="text-lg font-semibold">Recall preferences</h2>
+          <p className="text-sm text-muted-foreground">
+            Control the account-level notes that guide future conversations.
+          </p>
+        </div>
+
+        <MemoryDataTable
+          data={memories}
+          disabled={!isConnected || busy}
+          onDelete={handleDelete}
+          onDeleteMany={handleDeleteMany}
+          onStatusChange={handleStatusChange}
+          onStatusChangeMany={handleStatusChangeMany}
+        />
+      </section>
+    </div>
+  );
+}
+
+function ProofValue({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="grid gap-1">
+      <span className="text-xs font-medium text-muted-foreground">{label}</span>
+      <code className="overflow-hidden text-ellipsis rounded bg-muted px-2 py-1 text-xs">
+        {value}
+      </code>
     </div>
   );
 }

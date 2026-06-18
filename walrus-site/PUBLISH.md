@@ -7,11 +7,12 @@ Walrus aggregator.
 ## Current deployment
 
 - Network: Walrus/Sui Mainnet
-- Site object ID: pending mainnet publish
-- Base36 site ID: pending mainnet publish
-- Mainnet portal URL: pending mainnet publish
+- Site object ID: `0x423a0cf7bfa109ed48ae6fae63eead7b7eae751b0885925b137bfd1d9e597d2b`
+- Base36 site ID: `1nf7tlsp8yjmph7uq952gzp2r81wyayaqyinfeosgsw2ef2r6z`
+- Local portal URL: `http://1nf7tlsp8yjmph7uq952gzp2r81wyayaqyinfeosgsw2ef2r6z.localhost:3000`
+- Public `wal.app` URL requires a SuiNS name that points to the site object.
 - Owner:
-  `0x3044601613b894da25db9a014ec20a7e38e146ef9b4b6efccdde42544351c323`
+  `0x4b635af81752a2bcdaeb908bd522173ad1c86a859a9c56ee59d3089c35e0a622`
 
 Walrus docs state that `wal.app` supports Mainnet sites.
 
@@ -22,15 +23,15 @@ walrus-site/
 └── PUBLISH.md         # this file (ignored at publish time)
 ```
 
-Open `index.html` to preview the page locally without a portal. Set `BLOB_ID` in
-the inline script after publishing a public mainnet demo blob.
+Open `index.html` to preview the page locally without a portal. The current
+`BLOB_ID` points to a public mainnet demo artifact.
 
 ## Prerequisites (one-time)
 
 Publishing needs the `site-builder` + `walrus` CLIs and a Sui mainnet wallet with
 **WAL** tokens (Walrus storage is paid in WAL, not SUI).
 
-1. Install the Walrus client and `site-builder` — follow the official guide:
+1. Install the Walrus client and `site-builder`. Follow the official guide:
    https://docs.wal.app/docs/sites/getting-started/installing-the-site-builder
 2. Make sure `sui client active-address` points at a funded **mainnet** wallet.
 3. Make sure the wallet has mainnet WAL for storage and mainnet SUI for gas.

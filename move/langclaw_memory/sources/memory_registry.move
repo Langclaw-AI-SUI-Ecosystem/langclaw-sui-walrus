@@ -39,4 +39,20 @@ module langclaw_memory::memory_registry {
             recorder: ctx.sender(),
         });
     }
+
+    #[test]
+    fun records_memory_metadata() {
+        let owner = @0xA;
+        let mut scenario = sui::test_scenario::begin(owner);
+        record_memory(
+            b"run-1".to_string(),
+            b"0xhash".to_string(),
+            b"blob-1".to_string(),
+            b"0xobject".to_string(),
+            b"owner-only".to_string(),
+            owner,
+            scenario.ctx(),
+        );
+        scenario.end();
+    }
 }

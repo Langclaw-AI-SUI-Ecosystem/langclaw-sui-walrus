@@ -123,8 +123,8 @@
             </div>
             <div class="stat">
               <div class="k">Seal privacy</div>
-              <div class="v">Configured by env</div>
-              <div class="meta">owner-gated · access_policy::seal_approve</div>
+              <div class="v">Live · strict mainnet</div>
+              <div class="meta"><a href="https://suivision.xyz/object/0x86b608dcb3fcb9c629cfe6d865681977d1decb219a2eb98eb6058b87377feaf3" target="_blank" rel="noopener">KeyServer 0x86b608dc… ↗</a></div>
             </div>
             <div class="stat">
               <div class="k">MemWal recall</div>
@@ -133,8 +133,8 @@
             </div>
             <div class="stat">
               <div class="k">Sui anchor</div>
-              <div class="v">Pending publish</div>
-              <div class="meta"><a id="anchor" href="https://suivision.xyz" target="_blank" rel="noopener">Sui mainnet ↗</a></div>
+              <div class="v">Mainnet confirmed</div>
+              <div class="meta"><a id="anchor" href="https://suivision.xyz/txblock/aK7QiQdnbEXKtrHSZ5qifWcbfcBbu7UsFHsDjDFfR1H" target="_blank" rel="noopener">MemoryRecorded transaction ↗</a></div>
             </div>
           </div>
         </section>
@@ -152,7 +152,7 @@
       // Real user memories are Seal-encrypted; this one is public so the full
       // store -> retrieve -> read loop is auditable with no key.
       var AGGREGATOR = "https://aggregator.walrus-mainnet.walrus.space";
-      var BLOB_ID = "";
+      var BLOB_ID = "dFpx2A6pTOfEL41vTsOmMPo6LTMZ9aWlHsR24FwnanA";
       var url = BLOB_ID ? AGGREGATOR + "/v1/blobs/" + BLOB_ID : AGGREGATOR;
 
       document.getElementById("raw").href = url;

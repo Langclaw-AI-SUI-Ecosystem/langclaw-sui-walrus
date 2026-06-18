@@ -7,49 +7,57 @@ import {
   RadarIcon,
   ShieldCheckIcon,
 } from "lucide-react";
+import {
+  MAINNET_ARTIFACTS,
+  suiObjectUrl,
+  suiTxUrl,
+} from "@/lib/mainnet-artifacts";
 
 const proofItems: Array<{ href?: string; label: string; value: string }> = [
   { label: "Sui network", value: "mainnet" },
-  { label: "Agent ID", value: "#133" },
+  { label: "Agent ID", value: `#${MAINNET_ARTIFACTS.agentId}` },
   {
     label: "Package",
-    value: "Set in env",
+    value: `${MAINNET_ARTIFACTS.packageId.slice(0, 8)}...${MAINNET_ARTIFACTS.packageId.slice(-6)}`,
+    href: suiObjectUrl(MAINNET_ARTIFACTS.packageId),
   },
   {
-    label: "UsageVault",
-    value: "Set in env",
+    label: "Seal key server",
+    value: `${MAINNET_ARTIFACTS.keyServerId.slice(0, 8)}...${MAINNET_ARTIFACTS.keyServerId.slice(-6)}`,
+    href: suiObjectUrl(MAINNET_ARTIFACTS.keyServerId),
   },
   {
-    label: "Vault setup tx",
-    value: "Required",
+    label: "Memory anchor",
+    value: `${MAINNET_ARTIFACTS.memoryTx.slice(0, 8)}...${MAINNET_ARTIFACTS.memoryTx.slice(-6)}`,
+    href: suiTxUrl(MAINNET_ARTIFACTS.memoryTx),
   },
 ];
 
 const pipelineSteps = [
   {
     icon: MessageSquareTextIcon,
-    title: "Ask in Research",
-    text: "Run smart-money, holder-flow, liquidity anomaly, and protocol momentum prompts.",
+    title: "Run one: research",
+    text: "The agent produces a source-backed report for the connected Sui wallet.",
   },
   {
     icon: EyeIcon,
-    title: "Inspect evidence",
-    text: "Separate usable evidence from source gaps so weak provider coverage stays visible.",
+    title: "Encrypt with Seal",
+    text: "The report is encrypted under an owner-only access policy on Sui mainnet.",
   },
   {
     icon: RadarIcon,
-    title: "Track signals",
-    text: "Save alpha candidates to Watchlist for follow-up monitoring and review.",
+    title: "Store on Walrus",
+    text: "The encrypted artifact is written to Walrus and returned with a retrievable blob ID.",
   },
   {
     icon: FlaskConicalIcon,
-    title: "Test strategy",
-    text: "Use Strategy Lab to backtest Sui pair momentum before any real execution path.",
+    title: "Anchor on Sui",
+    text: "Langclaw records the content hash and storage reference in a mainnet transaction.",
   },
   {
     icon: BadgeCheckIcon,
-    title: "Publish proof",
-    text: "Record deterministic outcomes through the proof layer when the backend is configured.",
+    title: "Run two: recall",
+    text: "A later run decrypts relevant Walrus memory and uses it as research context.",
   },
 ];
 
@@ -92,12 +100,12 @@ export default function HomeDemoLaunchpad() {
           </div>
           <div className="flex flex-col gap-3">
             <h2 className="text-balance font-semibold text-3xl tracking-normal md:text-5xl">
-              A clean pipeline from research to proof.
+              One memory loop, fully verifiable.
             </h2>
             <p className="max-w-xl text-muted-foreground leading-7">
-              Langclaw keeps the user journey direct: ask a research question,
-              inspect the evidence, track the signal, test the strategy, then
-              anchor the decision when proof writing is available.
+              The demo shows two runs from the same wallet. The first stores
+              private memory. The second retrieves and reuses it. Every storage
+              and proof reference remains inspectable.
             </p>
           </div>
         </div>

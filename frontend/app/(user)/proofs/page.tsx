@@ -127,8 +127,11 @@ export default function ProofsPage() {
     return () => window.clearTimeout(timeoutId);
   }, [loadProofs]);
 
-  const decisions = payload?.decisions ?? [];
-  const strategyRecords = strategyPayload?.records ?? [];
+  const decisions = useMemo(() => payload?.decisions ?? [], [payload?.decisions]);
+  const strategyRecords = useMemo(
+    () => strategyPayload?.records ?? [],
+    [strategyPayload?.records],
+  );
   const stats = useMemo(() => {
     const txCount = decisions.filter((decision) => decision.txHash).length;
     const agents = new Set(decisions.map((decision) => decision.agentId));

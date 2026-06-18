@@ -41,7 +41,6 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  allowedDevOrigins: ["langclawcelo.vercel.app"],
   devIndicators: false,
   async headers() {
     return [

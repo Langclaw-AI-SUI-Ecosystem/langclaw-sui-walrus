@@ -8,11 +8,16 @@ export type ImageProps = Experimental_GeneratedImage & {
 
 export const Image = ({
   base64,
-  uint8Array: _uint8Array,
+  uint8Array,
   mediaType,
   ...props
-}: ImageProps) => (
-  <img
+}: ImageProps) => {
+  void uint8Array;
+
+  return (
+    // Data URLs are already generated assets and do not benefit from Next image optimization.
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
     {...props}
     alt={props.alt}
     className={cn(
@@ -20,5 +25,6 @@ export const Image = ({
       props.className
     )}
     src={`data:${mediaType};base64,${base64}`}
-  />
-);
+    />
+  );
+};

@@ -815,6 +815,22 @@ export type MemoryDashboard = {
   memories: MemoryItem[];
   settings: MemorySettings;
   stats: MemoryStats;
+  verifiableMemories: VerifiableMemoryItem[];
+};
+
+export type VerifiableMemoryItem = {
+  id: string;
+  runId: string;
+  topic: string;
+  contentHash: string;
+  walrusBlobId: string;
+  walrusBlobUrl?: string;
+  walrusObjectId: string;
+  sealPolicyId: string;
+  suiTxDigest?: string;
+  suiTxUrl?: string;
+  tags: string[];
+  createdAt: string;
 };
 
 export type MemorySettingsInput = Partial<
@@ -1428,6 +1444,7 @@ type MemoryResponse =
       memory?: MemoryItem;
       settings?: MemorySettings;
       stats?: MemoryStats;
+      verifiableMemories?: VerifiableMemoryItem[];
     };
 
 const DEFAULT_BACKEND_URL = "/api/backend";
@@ -1735,6 +1752,7 @@ export async function getMemoryDashboard(wallet: WalletAuth) {
     memories: response.memories ?? [],
     settings: requireMemorySettings(response.settings),
     stats: response.stats ?? buildMemoryStats(response.memories ?? []),
+    verifiableMemories: response.verifiableMemories ?? [],
   } satisfies MemoryDashboard;
 }
 
