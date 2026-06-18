@@ -17,6 +17,12 @@ client_config.yaml
 .langclaw-state/
 **/.langclaw-state/
 
+# ---- Retired monorepo source folders ----
+backend/
+frontend/
+move/
+walrus-site/
+
 # ---- Dependencies ----
 node_modules/
 **/node_modules/

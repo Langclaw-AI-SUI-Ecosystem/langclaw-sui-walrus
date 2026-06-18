@@ -1,7 +1,0 @@
-[package]
-name = "langclaw_memory"
-edition = "2024"
-version = "0.1.0"
-
-[addresses]
-langclaw_memory = "0x0"
